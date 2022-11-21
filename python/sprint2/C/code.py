@@ -1,7 +1,7 @@
 # ! change LOCAL to False before submitting !
 # set LOCAL to True for local testing
 
-LOCAL = True
+LOCAL = False
 
 if LOCAL:
     class Node:  
@@ -9,11 +9,25 @@ if LOCAL:
             self.value = value  
             self.next_item = next_item
 
+def get_node_by_index(node, idx):
+        while idx:
+            node = node.next_item
+            idx -= 1
+        return node
 
 def solution(node, idx):
-    # Your code
-    # ヽ(´▽`)/
-    pass
+    deleted_node = get_node_by_index(node, idx)
+    
+    if idx == 0:
+        if node.next_item is not None:
+            return get_node_by_index(node, idx+1)
+        return None
+
+    previous_node = get_node_by_index(node, idx-1)
+    previous_node.next_item = deleted_node.next_item
+        
+
+    return node
 
 def test():
     node3 = Node("node3", None)
