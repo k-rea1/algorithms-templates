@@ -1,13 +1,12 @@
-# ! change LOCAL to False before submitting !
-# set LOCAL to True for local testing
 
-LOCAL = False
+class Node:  
+    def __init__(self, value, next_item=None):  
+        self.value = value  
+        self.next_item = next_item
 
-if LOCAL:
-    class Node:  
-        def __init__(self, value, next_item=None):  
-            self.value = value  
-            self.next_item = next_item
+
+queue = []
+
 
 def get_node_by_index(node, idx):
         while idx:
