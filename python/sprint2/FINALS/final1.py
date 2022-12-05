@@ -1,4 +1,4 @@
-# ID: 75691946
+# ID: 75832779
 
 """
 Реализована структура данных Дек с возможностью добавлять возвращать элементы
@@ -7,63 +7,66 @@
 """
 
 
-class QueueSized:
+class Deque:
     def __init__(self, n):
-        self.queue = [None] * n
-        self.max_n = n
-        self.head = 0
-        self.tail = 0
-        self.current_size = 0
+        self.__queue = [None] * n
+        self.__max_n = n
+        self.__head = 0
+        self.__tail = 0
+        self.__current_size = 0
 
     def push_back(self, x):
         """
         добавить элемент в конец дека. Если в деке уже находится максимальное
-        число элементов, вывести «error».
+        число элементов, вывести ошибку.
         """
-        if self.current_size != self.max_n:
-            self.queue[self.tail] = x
-            self.tail = (self.tail + 1) % self.max_n
-            self.current_size += 1
+        if self.__current_size != self.__max_n:
+            self.__queue[self.__tail] = x
+            self.__tail = (self.__tail + 1) % self.__max_n
+            self.__current_size += 1
         else:
-            return print('error')
+            raise Exception('Full deque')
 
     def push_front(self, x):
         """
         добавить элемент в начало дека. Если в деке уже находится максимальное
-        число элементов, вывести «error».
+        число элементов, вывести ошибку.
         """
-        if self.current_size != self.max_n:
-            self.queue[self.head-1] = x
-            self.head = (self.head - 1) % self.max_n
-            self.current_size += 1
+        if self.__current_size != self.__max_n:
+            self.__queue[self.__head-1] = x
+            self.__head = (self.__head - 1) % self.__max_n
+            self.__current_size += 1
         else:
-            return print('error')
+            raise Exception('Full deque')
 
     def pop_front(self):
         """
         вывести первый элемент дека и удалить его. Если дек был пуст,
-        то вывести «error».
+        то вывести ошибку.
         """
-        if self.current_size == 0:
-            return print('error')
-        x = self.queue[self.head]
-        self.queue[self.head] = None
-        self.head = (self.head + 1) % self.max_n
-        self.current_size -= 1
+        if self.__current_size == 0:
+            raise Exception('Empty deque')
+        x = self.__queue[self.__head]
+        self.__queue[self.__head] = None
+        self.__head = (self.__head + 1) % self.__max_n
+        self.__current_size -= 1
         return print(x)
 
     def pop_back(self):
         """
         вывести последний элемент дека и удалить его. Если дек был пуст,
-        то вывести «error».
+        то вывести ошибку.
         """
-        if self.current_size == 0:
-            return print('error')
-        x = self.queue[self.tail-1]
-        self.queue[self.tail-1] = None
-        self.tail = (self.tail - 1) % self.max_n
-        self.current_size -= 1
+        if self.__current_size == 0:
+            raise Exception('Empty deque')
+        x = self.__queue[self.__tail-1]
+        self.__queue[self.__tail-1] = None
+        self.__tail = (self.__tail - 1) % self.__max_n
+        self.__current_size -= 1
         return print(x)
+
+    def len(self):
+        return self.__current_size
 
 
 """
@@ -108,14 +111,22 @@ pop_back
 
 """
 
-n = int(input())
-max_que = int(input())
-queue = QueueSized(max_que)
-for c in range(n):
-    command = input().split()
-    if len(command) == 1:
-        action = getattr(queue, command[0])
-        action()
-    else:
-        action = getattr(queue, command[0])
-        action(int(command[1]))
+if __name__ == '__main__':
+
+    n = int(input())
+    max_que = int(input())
+    MyDeque = Deque(max_que)
+    for c in range(n):
+        command = input().split()
+        if len(command) == 1:
+            action = getattr(MyDeque, command[0])
+            try:
+                action()
+            except Exception:
+                print('error')
+        else:
+            action = getattr(MyDeque, command[0])
+            try:
+                action(int(command[1]))
+            except Exception:
+                print('error')
