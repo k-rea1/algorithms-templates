@@ -2,8 +2,9 @@
 
 """
 Задание связано с обратной польской нотацией, в которой операнды расположены
-перед знаками операций. Задача: вычислить выражение, переданное в виде
-обратной польской нотации с использованием стэка.
+перед знаками операций. Для решения реализован класс типа Стэк, в котором
+обрабатывается каждый элемент принятой обратной польской нотации и результат
+каждой итерации вычислений добавляется в верхний элемент стэка.
 
 Пример 1:
 Ввод
@@ -20,6 +21,13 @@
 """
 
 import operator
+
+ops = {
+        '+': operator.add,
+        '-': operator.sub,
+        '*': operator.mul,
+        '/': operator.floordiv,
+        }
 
 
 class Stack:
@@ -40,16 +48,22 @@ class Stack:
 
     def push(self, item):
         """
-        Добавляет элемент в стэк.
+        Если передано число, оно добавляется в стэк. Если передан знак
+        операции, эта операция производится над последними двумя элементами
+        стэка, после чего эти элементы удаляются, а результат операции
+        добавляется в стэк.
         """
-        self.__items.append(item)
-        self.__len += 1
+        if item in ops.keys():
+            if self.len > 1:
+                result = ops[item](self.items[-2], self.items[-1])
+                self.items.pop()
+                self.items.pop()
+                self.items.append(result)
+                self.len -= 1
 
-    def length(self):
-        """
-        Возвращает размер стэка.
-        """
-        return self.__len
+        else:
+            self.items.append(int(item))
+            self.len += 1
 
 
 ops = {
@@ -66,20 +80,9 @@ MyStack = Stack()
 нотации. Числа и арифметические операции записаны через пробел.
 
 На вход могут подаваться операции: +, -, *, / и числа
-
-На выходе - результат вычисления обратной польской нотации.
 """
 
-if __name__ == '__main__':
-
-    input = input().split()
-    for i in input:
-        if i in ops.keys():
-            if MyStack.length() > 1:
-                b = MyStack.pop()
-                a = MyStack.pop()
-                result = ops[i](a, b)
-                MyStack.push(result)
-        else:
-            MyStack.push(int(i))
-    print(MyStack.pop())
+input = input().split()
+for i in input:
+    MyStack.push(i)
+print(MyStack.pop())
